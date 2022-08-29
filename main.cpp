@@ -1,6 +1,7 @@
 #include <cstring>
 #include <string>
 #include <malloc.h>
+#include <iostream>
 /*
  * 1. Отсутствие интерфейса для взаимодействия с переменными(опционально).
  * 2. Задание размера 'магическими числами', при необходимости достаточно вынести число как константу, например  int size = 1024;
@@ -29,7 +30,11 @@ public:
         delete[] x2;
 
         try {
+#ifdef _WIN32
             std::size_t sizeArr = _msize(_other.x1);
+#elif defined __linux__
+            std::size_t sizeArr = malloc_usable_size(_other.x1);
+#endif
             x1 = new char[sizeArr];
             for (int i{0}; i < sizeArr; ++i) {
                 x1[i] = _other.x1[i];
@@ -42,7 +47,11 @@ public:
         }
 
         try {
+#ifdef _WIN32
             std::size_t sizeArr = _msize(_other.x2);
+#elif defined __linux__
+            std::size_t sizeArr = malloc_usable_size(_other.x2);
+#endif
             x2 = new char[sizeArr];
             for (int i{0}; i < sizeArr; ++i) {
                 x2[i] = _other.x2[i];
